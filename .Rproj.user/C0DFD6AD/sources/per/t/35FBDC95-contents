@@ -1,0 +1,139 @@
+---
+title: "CreditRisk1"
+editor_options: 
+  chunk_output_type: console
+---
+
+## Importando Bibliotecas
+
+```{r warning=FALSE, message=FALSE}
+if (!require(pacman)) {
+install.packages("pacman")  
+}
+
+library(pacman)
+
+pacman::p_load(tidyverse,tidymodels,janitor,plotly,cowplot)
+```
+
+## Importando Base
+
+```{r message=FALSE,error=FALSE}
+df <- read_csv("credit_risk_dataset.csv") %>% 
+  janitor::clean_names()
+
+```
+
+## Análise Exploratória de Dados
+
+### Apresentação das Variáveis
+
+```{r message=FALSE,warning=FALSE}
+glimpse(df)
+```
+
+```{r}
+#Criando um tema para o banco fibra
+tema_bancofibra <- function(){
+  list(scale_fill_manual(values = c("#182c4b","#4d86bf","#dd9488")),
+                        scale_color_manual(values = c("#182c4b","#4d86bf","#dd9488")),
+                        theme_bw())
+}
+```
+
+### Análise das Variaveis Qualitativas
+
+```{r message=FALSE, error=FALSE, fig.width=10}
+## Função para Plot de Variáveis Categóricas
+
+character_plot <- function(df,var){
+  var_sym <- rlang::sym(var)
+  plot <- df %>% 
+  count(!!var_sym, cb_person_default_on_file) %>% 
+  mutate(!!var_sym := fct_reorder(!!var_sym, desc(n))) %>% 
+  ungroup %>% 
+  group_by(!!var_sym) %>% 
+  mutate(prcnt = n/sum(n)) %>% 
+  ggplot(aes(x = !!var_sym, y = n, fill = cb_person_default_on_file )) +
+  geom_col(position = "dodge")+
+  geom_label(aes(x = !!var_sym, y = n, fill = cb_person_default_on_file,
+                 label = scales::percent(prcnt, accuracy = 0.01, decimal.mark = ",")),
+             position = position_dodge(0.9), show.legend = FALSE, col = "white", fontface = 'bold') +
+  labs(title = paste("Relação Default e",str_to_title({{var}})))+
+  tema_bancofibra()
+  
+  print(plot)
+}
+
+df %>% 
+  select(where(is.character)) %>% 
+  names() %>% 
+  purrr::walk(~character_plot(df, .x))
+```
+
+### Análise Variáveis Quantitativas
+
+```{r}
+
+for (i in df %>% select(where(is.numeric)) %>% names()) {
+  grafico_name <- paste0("Grafico", which(df %>% select(where(is.numeric)) %>% names() == i))
+  var_sym <- rlang::sym(i)
+  assign(grafico_name,
+         df %>% 
+           ggplot(aes(x = cb_person_default_on_file, y = !!var_sym, fill = cb_person_default_on_file)) +
+           geom_boxplot(show.legend = FALSE) +
+           labs(title = paste('Box Plot de', {{i}}, 'por Default')) +
+           tema_bancofibra())
+}
+
+ggplotly(Grafico1)
+ggplotly(Grafico2)
+ggplotly(Grafico3)
+ggplotly(Grafico4)
+ggplotly(Grafico5)
+ggplotly(Grafico6)
+ggplotly(Grafico7)
+ggplotly(Grafico8)
+```
+
+## 
+
+## Separando Dados em Treino e Teste
+
+```{r}
+set.seed(2007)
+
+df_split <- initial_split(df,stata = cb_person_default_on_file)
+
+df_train <- training(df_split)
+
+df_test <- testing(df_split)
+
+
+```
+
+## Especificando o Modelo XGBoost
+
+```{r}
+xgb_model1 <- boost_tree() %>% 
+  set_engine("xgboost") %>% 
+  set_mode("classification")
+```
+
+## Preparando WorkFlow
+
+```{r}
+xgb_wf <- workflow() %>% 
+  add_formula( cb_person_default_on_file ~.) %>% 
+  add_model(xgb_model1)
+
+xgb_wf
+```
+
+## Criando Cross Validation Resample
+
+```{r}
+set.seed(2015)
+
+xgb_folds <- vfold_cv(df_train, strata = cb_person_default_on_file)
+```

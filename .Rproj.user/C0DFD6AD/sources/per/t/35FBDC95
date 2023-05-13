@@ -1,0 +1,33 @@
+{
+    "id": "35FBDC95",
+    "path": "~/Documentos/CompeticaoFibra/CreditRisk1/CreditRisk1.qmd",
+    "project_path": "CreditRisk1.qmd",
+    "type": "quarto_markdown",
+    "hash": "2657315599",
+    "contents": "",
+    "dirty": false,
+    "created": 1683681613463.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "rmdVisualMode": "true",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "3580:2659.199951171875",
+        "cursorPosition": "172,0",
+        "scrollLine": "0",
+        "chunk_output_type": "console",
+        "docOutlineSize": "123"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1683860101,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1683860101,
+    "read_only": false,
+    "read_only_alternatives": []
+}

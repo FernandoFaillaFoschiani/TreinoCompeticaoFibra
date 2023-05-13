@@ -1,0 +1,28 @@
+{
+    "id": "3843556C",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1683683996297.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "id": "81ec76e56e354c54b37c882857ce43f0",
+        "name": "Grafico2",
+        "title": "Grafico2",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1683683376,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1683683996297,
+    "read_only": false,
+    "read_only_alternatives": []
+}
